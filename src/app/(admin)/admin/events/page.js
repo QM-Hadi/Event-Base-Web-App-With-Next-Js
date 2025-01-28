@@ -1,3 +1,4 @@
+import { AddEvent } from "@/components/AddEvent/AddEvent";
 import {
   Table,
   TableBody,
@@ -48,7 +49,10 @@ const events = [
 export default function Event() {
   return (
     <div className="min-h-screen p-4">
-      <h1 className="flex justify-between text-2xl m-2">Events</h1>
+      <div className="flex items-center justify-between">
+        <h1 className="flex text-2xl m-2">Events</h1>
+        <AddEvent />
+      </div>
       <Table>
         <TableCaption>A list of your recent Events.</TableCaption>
         <TableHeader>
