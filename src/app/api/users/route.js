@@ -16,13 +16,16 @@ export async function POST(request) {
         const obj = await request.json();
         let newUser = new UserModal(obj);
         await newUser.save();
-
-        return Response.json({
-                msg: "users fetech succesfully!",
+    
+        return Response.json(
+            {
+                msg: "User added successfully!",
                 user: newUser,
-        },
-                { status: 201 });
-}
+            },
+            { status: 201 }
+        );
+    }
+    
 
 export async function PUT(request) { }
 
