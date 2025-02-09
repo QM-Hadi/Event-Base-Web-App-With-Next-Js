@@ -1,6 +1,5 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { auth } from "../../../../auth";
-
 import Image from "next/image";
 import Link from "next/link";
 import { redirect } from "next/navigation";

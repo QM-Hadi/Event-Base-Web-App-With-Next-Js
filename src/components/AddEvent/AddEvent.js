@@ -41,7 +41,7 @@ export function AddEvent() {
           <ScrollArea className="flex-grow px-4">
             <form className="space-y-6 pb-6">
               <div className="space-y-2">
-                <Label htmlFor="name">Event Name</Label>
+                <Label htmlFor="name">Title</Label>
                 <Input id="name" placeholder="Enter category name" />
               </div>
               <div className="space-y-2">
@@ -49,37 +49,37 @@ export function AddEvent() {
                 <Textarea id="description" placeholder="Enter category description" rows={4} />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="icon">Icon</Label>
-                <div className="flex items-center gap-2">
-                  <Button variant="outline" size="icon" className="h-10 w-10">
-                    <Folder className="h-5 w-5" />
-                  </Button>
-                  <span className="text-sm text-muted-foreground">Choose an icon (optional)</span>
-                </div>
+                <Label htmlFor="name">Start Time</Label>
+                <Input id="name" placeholder="Enter category name" />
               </div>
               <div className="space-y-2">
-                <Label>Parent Category</Label>
-                <Button variant="outline" className="w-full justify-between">
-                  <span>Select parent category (optional)</span>
-                  <ChevronRight className="h-4 w-4 opacity-50" />
-                </Button>
+                <Label htmlFor="name">End Time</Label>
+                <Input id="name" placeholder="Enter category name" />
               </div>
+              <div className="space-y-2">
+                <Label htmlFor="name">Start Date</Label>
+                <Input id="name" placeholder="Enter category name" />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="name">End Date</Label>
+                <Input id="name" placeholder="Enter category name" />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="name">Location</Label>
+                <Input id="name" placeholder="Enter category name" />
+              </div>
+              <DrawerFooter className="flex-shrink-0 border-t pt-4">
+                <div className="flex-shrink-0 border-t pt-4">
+                  <div className="flex justify-between w-full">
+                    <Button type='submit' className="gap-2">
+                      <Plus className="h-4 w-4" />
+                      Save Changes
+                    </Button>
+                  </div>
+                </div>
+              </DrawerFooter>
             </form>
           </ScrollArea>
-          <DrawerFooter className="flex-shrink-0 border-t pt-4">
-            <div className="flex justify-between w-full">
-              <DrawerClose asChild>
-                <Button variant="outline" className="gap-2">
-                  <X className="h-4 w-4" />
-                  Cancel
-                </Button>
-              </DrawerClose>
-              <Button className="gap-2">
-                <Plus className="h-4 w-4" />
-                Add Event
-              </Button>
-            </div>
-          </DrawerFooter>
         </div>
       </DrawerContent>
     </Drawer>
