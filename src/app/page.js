@@ -16,10 +16,10 @@ export default async function Home() {
               await signOut()
             }}
           >
-            <Button type="submit">Sign Out</Button>
+            <Button className={'bg-blue-600'} type="submit">Sign Out</Button>
           </form> :
           <Link href={'/signin'}>
-            <Button type="submit">Sign In</Button>
+            <Button className={'bg-blue-600'} type="submit">Sign In</Button>
           </Link>
       }
     </div>

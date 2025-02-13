@@ -19,32 +19,32 @@ import { uploadImage } from "@/actions/upload";
 import { addCategory } from "@/actions/categories";
 
 export function AddCategory() {
-const [open,setOpen]=React.useState(false);
-const [loading , setLoading]=React.useState(false);
+  const [open, setOpen] = React.useState(false);
+  const [loading, setLoading] = React.useState(false);
 
-async function handleAddCategory(event) {
-  event.preventDefault();
-  try {
-    const formData = new FormData(event.target);
-    const file = formData.get("thumbnail"); // Get uploaded file
+  async function handleSubmit(event) {
+    event.preventDefault();
+    try {
+      const formData = new FormData(event.target);
+      const file = formData.get("thumbnail"); // Get uploaded file
 
-    if (!file || !(file instanceof File)) {
-      throw new Error("No valid file selected.");
-    }
+      if (!file || !(file instanceof File)) {
+        throw new Error("No valid file selected.");
+      }
 
-    const imageUrl = await uploadImage(file);
-    const obj ={
-      title:formData.get("title"),
-      description :formData.get("description"),
-      thumbnail :imageUrl,
+      const imageUrl = await uploadImage(file);
+      const obj = {
+        title: formData.get("title"),
+        description: formData.get("description"),
+        thumbnail: imageUrl,
+      };
+      console.log('Get Thumbnail URL=>', obj.thumbnail)
+    } catch (error) {
+      console.log(error.message || "Failed to upload image.");
     };
-    console.log("imageUrl:", obj);
-  } catch (error) {
-    console.log(error.message || "Failed to upload image.");
-  };
-  await addCategory(obj);
+    await addCategory(obj);
 
-}
+  }
 
   return (
     <Drawer open={open} onOpenChange={setOpen}>
@@ -64,18 +64,18 @@ async function handleAddCategory(event) {
             <DrawerDescription>Create a new category to organize your items.</DrawerDescription>
           </DrawerHeader>
           <ScrollArea className="flex-grow px-4">
-            <form className="space-y-6 pb-6" onSubmit={handleAddCategory}>
+            <form  className="space-y-6 pb-6"onSubmit={handleSubmit}>
               <div className="space-y-2">
                 <Label htmlFor="title">Title</Label>
-                <Input required name="title" id="title" placeholder="sports" />
+                <Input required type='text' name="title" value={formData.title} onChange={handleChange} id="title" placeholder="Category Title" />
               </div>
               <div className="space-y-2">
                 <Label htmlFor="description">Description</Label>
-                <Input required name="description" id="description" placeholder="About Category" />
+                <Input required name="description" type='text' value={formData.description} onChange={handleChange} id="description" placeholder="About Category" />
               </div>
               <div className="space-y-2">
                 <Label htmlFor="thumbnail">Thumbnail</Label>
-                <Input required name="thumbnail" type="file" />
+                <Input required value={formData.thumbnail} onChange={handleChange} name="thumbnail" type="file" />
               </div>
               <DrawerFooter className="flex-shrink-0 border-t pt-4">
                 <Button type="submit" className="gap-2" disabled={loading}>
@@ -88,5 +88,6 @@ async function handleAddCategory(event) {
         </div>
       </DrawerContent>
     </Drawer>
+    
   );
 }
