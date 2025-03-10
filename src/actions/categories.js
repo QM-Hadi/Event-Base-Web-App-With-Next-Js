@@ -2,7 +2,6 @@
 
 "use server"
 
-import axios from "axios";
 
 // import { revalidatePath } from "next/cache";
 

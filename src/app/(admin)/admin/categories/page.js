@@ -1,4 +1,4 @@
-"use client"
+// "use client"
 import { useEffect, useState } from "react";
 import { AddCategory } from "@/components/AddCategory/AddCategory";
 import Image from "next/image";
