@@ -1,30 +1,34 @@
-import dbConnect from "../../utils/dbConnect";
-import Category from "../../models/Category";
+import { NextRequest, NextResponse } from "next/server";
+import { Category } from "../../../lib/models/Category";
+import { connectDB } from "@/lib/db/connectDB";
 
-export default async function handler(req, res) {
-  await dbConnect();
+export async function POST(req) {
+  await connectDB();
 
-  if (req.method === "POST") {
-    try {
-      const { title, description, thumbnail } = req.body;
-
-      if (!title || !description || !thumbnail) {
-        return res.status(400).json({ error: "All fields are required." });
-      }
-
-      const newCategory = new Category({ title, description, thumbnail });
-      await newCategory.save();
-
-      res.status(201).json({ message: "Category added!", category: newCategory });
-    } catch (error) {
-      res.status(500).json({ error: "Error saving category" });
+  try {
+    var data = await req.json()
+    console.log(data);
+    
+    // return NextResponse.json({ message: "Category created successfully" }, {data: data});
+    const { title, description, thumbnail } = data;
+    if (!title || !description || !thumbnail) {
+      return NextResponse.json({ error: "All fields are required." }, { status: 404 });
     }
-  } else if (req.method === "GET") {
-    try {
-      const categories = await Category.find();
-      res.status(200).json(categories);
-    } catch (error) {
-      res.status(500).json({ error: "Error fetching categories" });
-    }
+
+    const newCategory = new Category({ title, description, thumbnail });
+    await newCategory.save();
+
+    return NextResponse.json({ message: "Category added!", category: newCategory }, { status: 201 });
+  } catch (error) {
+    return NextResponse.json({ error: "Error saving category" }, { status: 400 });
   }
+}
+export async function GET(){
+  await connectDB();
+  try{
+    data=await Category.find();
+
+    return NextResponse.json({data:data}, {status:200})
+  }
+  catch(err){}
 }

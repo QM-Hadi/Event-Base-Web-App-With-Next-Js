@@ -1,16 +1,9 @@
+import mongoose from "mongoose";
 
+const CategorySchema = new mongoose.Schema({
+  title: { type: String, required: true },
+  description: { type: String, required: true },
+  thumbnail: { type: String, required: true },
+});
 
-import mongoose from 'mongoose';
-const { Schema } = mongoose;
-
-
-const CategorySchema = new Schema({
-    title: string,
-    description: string,
-    thumbnail: string,
-
-})
-
-
-
-export const CategoryModal = mongoose.model('Categories', CategorySchema);
+export const Category = mongoose.models.Category || mongoose.model("Category", CategorySchema);

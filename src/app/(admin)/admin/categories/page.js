@@ -1,5 +1,5 @@
 "use client"
-import {  useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { AddCategory } from "@/components/AddCategory/AddCategory";
 import Image from "next/image";
 import {
@@ -14,20 +14,34 @@ import {
 
 export default function Categories() {
   const [categories, setCategories] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     fetchCategories();
   }, []);
 
   const fetchCategories = async () => {
-    const response = await fetch("/api/categories");
-    const data = await response.json();
-    setCategories(data);
+    try {
+      const response = await fetch("/api/categories");
+      if (!response.ok) {
+        throw new Error("Failed to fetch categories");
+      }
+      const data = await response.json();
+      setCategories(data);
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleCategoryAdded = (newCategory) => {
     setCategories((prev) => [newCategory, ...prev]);
   };
+
+  if (loading) return <div>Loading...</div>;
+  if (error) return <div>Error: {error}</div>;
 
   return (
     <div className="min-h-screen p-4">
@@ -50,7 +64,13 @@ export default function Categories() {
           {categories.map((category) => (
             <TableRow key={category._id}>
               <TableCell>
-                <Image src={category.thumbnail} alt="Category Thumbnail" height={40} width={40} />
+                <Image
+                  src={category.thumbnail}
+                  alt="Category Thumbnail"
+                  height={40}
+                  width={40}
+                  layout="intrinsic"
+                />
               </TableCell>
               <TableCell>{category.title}</TableCell>
               <TableCell>{category.description}</TableCell>

@@ -16,37 +16,69 @@ import {
   DrawerTrigger,
 } from "@/components/ui/drawer";
 import { uploadImage } from "@/actions/upload";
-import { addCategory } from "@/actions/categories";
+import { addCategory, getCategory } from "@/actions/categories";
 
 export function AddCategory() {
   const [open, setOpen] = React.useState(false);
   const [loading, setLoading] = React.useState(false);
+  const [data, setData] = React.useState([])
+  const [formData, setFormData] = React.useState({
+    title: "",
+    description: "",
+    thumbnail: null,
+  });
+
+  React.useEffect( ()=>{
+    async function fetchData(){
+
+      const res = await getCategory();
+      setData(res);
+      console.log(res);
+      
+    }
+    fetchData();
+  },[data])
+
+  function handleChange(event) {
+    const { name, value, type, files } = event.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: type === "file" ? files[0] : value, // Handle file input separately
+    }));
+  }
 
   async function handleSubmit(event) {
     event.preventDefault();
+    setLoading(true);
     try {
-      const formData = new FormData(event.target);
-      const file = formData.get("thumbnail"); // Get uploaded file
+      let imageUrl = "";
 
-      if (!file || !(file instanceof File)) {
-        throw new Error("No valid file selected.");
+      if (formData.thumbnail) {
+        imageUrl = await uploadImage(formData.thumbnail); // Upload image if selected
       }
 
-      const imageUrl = await uploadImage(file);
       const obj = {
-        title: formData.get("title"),
-        description: formData.get("description"),
+        title: formData.title,
+        description: formData.description,
         thumbnail: imageUrl,
       };
-      console.log('Get Thumbnail URL=>', obj.thumbnail)
-    } catch (error) {
-      console.log(error.message || "Failed to upload image.");
-    };
-    await addCategory(obj);
 
+      const newData = await addCategory(obj);
+      console.log("Category Added Successfully:", newData);
+      setData(...data, newData);
+
+      // Reset form and close drawer
+      setFormData({ title: "", description: "", thumbnail: null });
+      setOpen(false);
+    } catch (error) {
+      console.error("Failed to upload image:", error.message);
+    } finally {
+      setLoading(false);
+    }
   }
 
   return (
+    <>
     <Drawer open={open} onOpenChange={setOpen}>
       <DrawerTrigger asChild>
         <Button variant="outline" className="gap-2">
@@ -64,18 +96,34 @@ export function AddCategory() {
             <DrawerDescription>Create a new category to organize your items.</DrawerDescription>
           </DrawerHeader>
           <ScrollArea className="flex-grow px-4">
-            <form  className="space-y-6 pb-6"onSubmit={handleSubmit}>
+            <form className="space-y-6 pb-6" onSubmit={handleSubmit}>
               <div className="space-y-2">
                 <Label htmlFor="title">Title</Label>
-                <Input required type='text' name="title" value={formData.title} onChange={handleChange} id="title" placeholder="Category Title" />
+                <Input
+                  required
+                  type="text"
+                  name="title"
+                  value={formData.title}
+                  onChange={handleChange}
+                  id="title"
+                  placeholder="Category Title"
+                />
               </div>
               <div className="space-y-2">
                 <Label htmlFor="description">Description</Label>
-                <Input required name="description" type='text' value={formData.description} onChange={handleChange} id="description" placeholder="About Category" />
+                <Input
+                  required
+                  name="description"
+                  type="text"
+                  value={formData.description}
+                  onChange={handleChange}
+                  id="description"
+                  placeholder="About Category"
+                />
               </div>
               <div className="space-y-2">
                 <Label htmlFor="thumbnail">Thumbnail</Label>
-                <Input required value={formData.thumbnail} onChange={handleChange} name="thumbnail" type="file" />
+                <Input required name="thumbnail" type="file" onChange={handleChange} />
               </div>
               <DrawerFooter className="flex-shrink-0 border-t pt-4">
                 <Button type="submit" className="gap-2" disabled={loading}>
@@ -88,6 +136,18 @@ export function AddCategory() {
         </div>
       </DrawerContent>
     </Drawer>
+
+    {/* Render */}
+
+    {data.map(elem => {
+      return (
+        <div key={elem.id} className="flex flex-col items-center justify-center p-4">
+          elem.title
+        </div>
+      )
+    })}
+
+    </>
     
   );
 }
